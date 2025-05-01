@@ -14,6 +14,8 @@
   "author": "edsadr",
   "license": "MIT",
   "dependencies": {
-    "colorette": "^2.0.20"
+    "colorette": "^2.0.20",
+    "marked": "^15.0.11",
+    "marked-terminal": "^7.3.0"
   }
 }

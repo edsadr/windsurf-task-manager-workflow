@@ -8,9 +8,14 @@ const path = require('path')
 const https = require('https')
 const readline = require('readline')
 const { cyan, yellow, green, red, bold } = require('colorette')
+const marked = require('marked')
+
+// marked-terminal v7+ is ESM-only. Use require and .default for CJS compatibility.
+const TerminalRenderer = require('marked-terminal').default || require('marked-terminal')
 
 const REMOTE_REPO = 'edsadr/windsurf-task-manager-workflow'
-const RAW_BASE = `https://raw.githubusercontent.com/${REMOTE_REPO}/main`
+// Use the correct branch ref for raw URLs
+const RAW_BASE = `https://raw.githubusercontent.com/${REMOTE_REPO}/refs/heads/master`
 const DOCS_PATH = 'docs' // remote docs directory
 const LOCAL_DEST = process.cwd()
 
@@ -56,11 +61,18 @@ function fetchDocsList() {
 
 // Print README instructions
 async function printReadme() {
+  // Use the correct URL for the README
   const readmeUrl = `${RAW_BASE}/README.md`
   try {
     const readme = await fetchRemoteFile(readmeUrl)
-    console.log(bold(cyan('\n--- Remote README Instructions ---\n')))
-    console.log(yellow(readme))
+    // Render markdown to terminal-friendly output using marked-terminal
+    marked.setOptions({
+      renderer: new TerminalRenderer(),
+      mangle: false,
+      headerIds: false
+    })
+    const rendered = marked.parse(readme)
+    console.log(rendered)
     console.log(bold(cyan('\n--- End of Instructions ---\n')))
   } catch (err) {
     console.log(red('Could not fetch remote README.md:'), err.message)
@@ -80,12 +92,17 @@ function askConfirmation() {
 
 // Download and write a file
 async function downloadDoc(file) {
-  const url = file.download_url
-  const dest = path.join(LOCAL_DEST, file.name)
+  // Ensure docs directory exists
+  if (!fs.existsSync(DOCS_PATH)) {
+    fs.mkdirSync(DOCS_PATH, { recursive: true })
+  }
+  // Use the correct raw URL for docs
+  const url = `${RAW_BASE}/docs/${file.name}`
+  const dest = path.join(DOCS_PATH, file.name)
   try {
     const data = await fetchRemoteFile(url)
     fs.writeFileSync(dest, data)
-    console.log(green(`Copied: ${file.name}`))
+    console.log(green(`Copied: docs/${file.name}`))
   } catch (err) {
     console.log(red(`Failed to copy ${file.name}: ${err.message}`))
   }

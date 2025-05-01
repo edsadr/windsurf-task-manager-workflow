@@ -2,7 +2,7 @@
 
 ## Goal
 
-To guide Windsurf in creating a detailed, step-by-step task list in Markdown format based on an existing Product Requirements Document (PRD). The task list should be suitable for a developer to follow for implementation.
+To guide Windsurf editor in creating a detailed, step-by-step task list in Markdown format based on an existing Product Requirements Document (PRD). The task list should be suitable for a developer to follow for implementation.
 
 ## Output
 
