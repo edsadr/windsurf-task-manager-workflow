@@ -108,6 +108,32 @@ async function downloadDoc(file) {
   }
 }
 
+// Extract lines 1-49 from README.md and write to docs/instructions.md in the current working directory
+async function copyInstructionsFromReadme () {
+  // Read README.md from the script's directory
+  const readmePath = path.join(__dirname, 'README.md')
+  // Write instructions.md to the docs/ subdirectory of the current working directory
+  const docsDir = path.join(process.cwd(), 'docs')
+  const instructionsPath = path.join(docsDir, 'instructions.md')
+  try {
+    const content = await fs.promises.readFile(readmePath, 'utf8')
+    // Split into lines and extract lines 0-48 (1-49 inclusive)
+    const lines = content.split(/\r?\n/)
+    const instructions = lines.slice(0, 49).join('\n').trim()
+    if (!instructions) {
+      throw new Error('No instructions found in the specified line range of README.md')
+    }
+    // Ensure docs directory exists in cwd
+    if (!fs.existsSync(docsDir)) {
+      fs.mkdirSync(docsDir, { recursive: true })
+    }
+    await fs.promises.writeFile(instructionsPath, instructions, 'utf8')
+    console.log(green(`Instructions copied to docs/instructions.md in the current directory`))
+  } catch (err) {
+    console.log(red('Failed to extract/write instructions from README.md:'), err.message)
+  }
+}
+
 // Main logic
 (async () => {
   await printReadme()
@@ -116,6 +142,8 @@ async function downloadDoc(file) {
     console.log(red('Aborted by user.'))
     process.exit(1)
   }
+  // Copy instructions from local README.md to docs/instructions.md
+  await copyInstructionsFromReadme()
   console.log(cyan('\nFetching docs from remote repo...'))
   let docs
   try {
