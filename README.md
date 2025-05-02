@@ -4,21 +4,7 @@ Follow this 6-step process for effectively managing an AI developer within Winds
 
 **Prerequisites:** Access to Windsurf editor and the necessary rule files (`generate-tasks.md`, `task-list.md`).
 
-**Step 1: Prepare Workspace with Windsurf Rules**
-
-* **Purpose:** Establish clear coding, workflow, and collaboration standards for your project by creating a `.windsurfrules` file, ensuring Cascade (Windsurf AI) behaves according to your team's conventions.
-* **How:**
-    * Use the [docs/create-windsurf-rules.md](docs/create-windsurf-rules.md) as a guide.
-    * In Windsurf editor Agent chat, start with:
-        ```
-        Use @create-windsurf-rules.md
-        Here are my project/workspace preferences: {describe your rules or leave blank to be prompted}
-        ```
-    * Answer any clarifying questions from Cascade to refine your rules.
-    * Save the output as `.windsurfrules` in your project root (optionally add to `.gitignore` if workspace-specific).
-* **Output:** A `.windsurfrules` file in your project root, tailored to your workflow and codebase.
-
-**Step 2: Create a Product Requirement Document (PRD)**
+**Step 1: Create a Product Requirement Document (PRD)**
 
 * **Purpose:** Define what you are trying to build. A clear PRD is essential for guiding Windsurf editor.
 * **How:** Create a PRD in a markdown file (`.md`) directly within Windsurf editor. Clearly outline the features, requirements, and goals of your project.
@@ -29,12 +15,26 @@ Follow this 6-step process for effectively managing an AI developer within Winds
         ```
 * **Output:** A markdown file (e.g., `YourProject-PRD.md`) detailing the product requirements.
 
+**Step 2: Prepare Workspace with Windsurf Rules**
+
+* **Purpose:** Establish clear coding, workflow, and collaboration standards for your project by creating a `windsurfrules.md` file, ensuring Cascade (Windsurf AI) behaves according to your team's conventions.
+* **How:**
+    * Use the [docs/create-windsurf-rules.md](docs/create-windsurf-rules.md) as a guide.
+    * In Windsurf editor Agent chat, start with:
+        ```
+        Follow the process in @create-windsurf-rules.md have in mind the context of @YourProject-PRD.md
+        ```
+    * Answer any clarifying questions from Cascade to refine your rules.
+    * Save the output as `windsurfrules.md` in your project root.
+    * **Important:** After reviewing and editing, manually rename `windsurfrules.md` to `.windsurfrules` to activate the rules for your workspace.
+* **Output:** A `windsurfrules.md` file in your project root, to be renamed as `.windsurfrules`.
+
 **Step 3: Generate a Task List from the PRD**
 
 * **Purpose:** Convert the high-level requirements from the PRD into a detailed, step-by-step implementation plan for Windsurf editor.
 * **How:**
     * Use the `generate-tasks.md` rule file (available within Windsurf editor).
-    * In Windsurf editor Agent chat, use the following command structure, replacing `YourProject-PRD.md` with the actual filename of your PRD from Step 2:
+    * In Windsurf editor Agent chat, use the following command structure, replacing `YourProject-PRD.md` with the actual filename of your PRD from Step 1:
         ```
         Take @YourProject-PRD.md and create tasks using @generate-tasks.md
         ```
@@ -92,15 +92,35 @@ You can also run it directly if you have the repo cloned:
 
 **Workflow Summary:**
 
-1.  **Prepare Workspace with Windsurf Rules:** Create a `.windsurfrules` file using [docs/create-windsurf-rules.md](docs/create-windsurf-rules.md).
-2.  **Create PRD:** Manually create your `YourProject-PRD.md` file within Windsurf editor.
-3.  **Generate Tasks (Windsurf Agent):** Use the available `generate-tasks.md` file.
-    ```
-    Now take @YourProject-PRD.md and create tasks using @generate-tasks.md
-    ```
-4.  **Review Tasks:** Manually examine the generated task list.
-5.  **Start Execution (Windsurf Agent - First Task Only):** Use the available `task-list.md` file.
-    ```
-    Please start on 1.1 and use @task-list.md
-    ```
-6.  **Verify & Continue:** Review Windsurf editor output for each task and prompt it for the next one as needed.
+Here are example prompts to use with the files already provided in this repo:
+
+1. **Create a PRD**
+Prompt:
+```
+Use @create-prd.md
+Here's the feature: {describe your feature here}
+```
+
+2. **Prepare Workspace with Windsurf Rules**
+Prompt:
+```
+Follow the process in @create-windsurf-rules.md have in mind the context of @YourProject-PRD.md
+```
+
+3. **Generate Tasks from PRD**
+Prompt:
+```
+Take @YourProject-PRD.md and create tasks using @generate-tasks.md
+```
+
+4. **Start Task Execution**
+Prompt:
+```
+Please start on 1.1 and use @task-list.md
+```
+
+5. **Continue/Verify**
+After each task, review the output. When ready, instruct:
+```
+Continue with the next task
+```

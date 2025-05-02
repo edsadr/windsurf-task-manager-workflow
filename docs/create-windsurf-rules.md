@@ -2,14 +2,15 @@
 
 ## Goal
 
-To guide users in creating a clear, actionable, and effective `.windsurfrules` document for their project, ensuring Cascade (Windsurf AI) follows specific coding, workflow, or project guidelines tailored to the workspace. This process aligns with Windsurf's best practices.
+To guide users in creating a clear, actionable, and effective `windsurfrules.md` document for their project, ensuring Cascade (Windsurf AI) follows specific coding, workflow, or project guidelines tailored to the workspace. This process aligns with Windsurf's best practices.
 
 ## Process
 
 1. **Receive Initial Prompt:** The user provides a description or intent for the rules they want Cascade to follow.
 2. **Ask Clarifying Questions:** Before generating the rules document, Cascade should ask clarifying questions one by one until enough context is gathered. The goal is to understand the user's coding standards, workflow preferences, and any unique project requirements.
-3. **Generate Rules Document:** Based on the prompt and answers, generate a `.windsurfrules` document using the structure and best practices outlined below.
-4. **Save Rules:** Save the generated document as `.windsurfrules` in the project root. Optionally ask the user if they want to add `.windsurfrules` to `.gitignore` if the rules are workspace-specific.
+3. **Generate Rules Document:** Based on the prompt and answers, generate a `windsurfrules.md` document using the structure and best practices outlined below.
+4. **Save Rules:** Save the generated document as `windsurfrules.md` in the project root.
+5. **Review and Activate Rules:** Review the generated `windsurfrules.md` document, make any necessary edits, and then manually rename it to `.windsurfrules` in your project root to activate the rules for your workspace.
 
 ## Clarifying Questions (Examples)
 
@@ -26,7 +27,7 @@ Cascade should adapt its questions, but common areas include:
 
 ## Rules Document Structure
 
-The generated `.windsurfrules` should include the following sections as appropriate:
+The generated `windsurfrules.md` should include the following sections as appropriate:
 
 1. **Introduction/Overview:** Briefly state the purpose of the rules and their intended scope (e.g., "These rules guide Cascade in generating code for this workspace.")
 2. **Coding Guidelines:** Bullet points or numbered lists of code style, formatting, and language-specific rules.
@@ -71,9 +72,9 @@ Or using XML-style grouping:
 
 ## Output
 
-- **Format:** Markdown (`.md`) or plaintext (`.windsurfrules`)
-- **Location:** Project root (for `.windsurfrules`) or `docs/` (for documentation)
-- **Filename:** `.windsurfrules` (for workspace rules), `global_rules.md` (for global rules)
+- **Format:** Markdown (`.md`)
+- **Location:** Project root (for `windsurfrules.md`)
+- **Filename:** `windsurfrules.md` (to be renamed to `.windsurfrules` after review)
 
 ## References
 
@@ -85,3 +86,4 @@ Or using XML-style grouping:
 1. Always ask clarifying questions before generating rules.
 2. Use the user's answers to refine and improve the rules document.
 3. Keep the document actionable, clear, and concise for both technical and non-technical contributors.
+4. To activate your rules, review the generated `windsurfrules.md`, make any necessary edits, and then manually rename it to `.windsurfrules` in your project root.
