@@ -108,7 +108,7 @@ async function downloadDoc(file) {
   }
 }
 
-// Extract lines 1-49 from README.md and write to docs/instructions.md in the current working directory
+// Extract the workflow instructions section from README.md and write to docs/instructions.md in the current working directory
 async function copyInstructionsFromReadme () {
   // Read README.md from the script's directory
   const readmePath = path.join(__dirname, 'README.md')
@@ -117,11 +117,32 @@ async function copyInstructionsFromReadme () {
   const instructionsPath = path.join(docsDir, 'instructions.md')
   try {
     const content = await fs.promises.readFile(readmePath, 'utf8')
-    // Split into lines and extract lines 0-48 (1-49 inclusive)
     const lines = content.split(/\r?\n/)
-    const instructions = lines.slice(0, 49).join('\n').trim()
+    // Find the start of the workflow section
+    const startIdx = lines.findIndex(line => line.trim().startsWith('## Windsurf Task Manager Workflow'))
+    if (startIdx === -1) throw new Error('Workflow section not found in README.md')
+    // Find the end of the workflow summary (after the last numbered step)
+    let endIdx = -1
+    const summaryIdx = lines.findIndex((line, i) => i > startIdx && line.trim() === '**Workflow Summary:**')
+    if (summaryIdx !== -1) {
+      // Find the last numbered step after summaryIdx
+      let lastStep = summaryIdx + 1
+      while (lastStep < lines.length && /^\d+\./.test(lines[lastStep].trim())) {
+        lastStep++
+      }
+      // Also include any indented code blocks under the last numbered step
+      while (lastStep < lines.length && (lines[lastStep].startsWith('    ') || lines[lastStep].trim() === '')) {
+        lastStep++
+      }
+      endIdx = lastStep
+    } else {
+      // If summary not found, fall back to next major header or end of file
+      endIdx = lines.findIndex((line, i) => i > startIdx && line.startsWith('## '))
+      if (endIdx === -1) endIdx = lines.length
+    }
+    const instructions = lines.slice(startIdx, endIdx).join('\n').trim()
     if (!instructions) {
-      throw new Error('No instructions found in the specified line range of README.md')
+      throw new Error('No instructions found in the workflow section of README.md')
     }
     // Ensure docs directory exists in cwd
     if (!fs.existsSync(docsDir)) {

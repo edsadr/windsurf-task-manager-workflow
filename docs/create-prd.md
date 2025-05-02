@@ -7,7 +7,7 @@ To guide Windsurf editor in creating a detailed Product Requirements Document (P
 ## Process
 
 1. **Receive Initial Prompt:** The user provides a brief description or request for a new feature or functionality.
-2. **Ask Clarifying Questions:** Before writing the PRD, Windsurf editor *must* ask clarifying questions to gather sufficient detail. The goal is to understand the "what" and "why" of the feature, not necessarily the "how" (which the developer will figure out).
+2. **Ask Clarifying Questions:** Before writing the PRD, Windsurf editor *must* ask clarifying questions to gather sufficient detail, make the questions one by one until have enough information to generate the PRD. The goal is to understand the "what" and "why" of the feature, not necessarily the "how" (which the developer will figure out).
 3. **Generate PRD:** Based on the initial prompt and the user's answers to the clarifying questions, generate a PRD using the structure outlined below.
 4. **Save PRD:** Save the generated document as `prd-[feature-name].md` inside the `docs/tasks` directory.
 
