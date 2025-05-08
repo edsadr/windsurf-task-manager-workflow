@@ -16,7 +16,7 @@ const TerminalRenderer = require('marked-terminal').default || require('marked-t
 const REMOTE_REPO = 'edsadr/windsurf-task-manager-workflow'
 // Use the correct branch ref for raw URLs
 const RAW_BASE = `https://raw.githubusercontent.com/${REMOTE_REPO}/refs/heads/master`
-const DOCS_PATH = 'docs' // remote docs directory
+const WORKFLOWS_PATH = '.windsurf/workflows' // remote workflows directory
 const LOCAL_DEST = process.cwd()
 
 // Helper to fetch a remote file as string
@@ -36,7 +36,7 @@ function fetchRemoteFile(url) {
 
 // Helper to fetch remote directory listing via GitHub API
 function fetchDocsList() {
-  const apiUrl = `https://api.github.com/repos/${REMOTE_REPO}/contents/${DOCS_PATH}`
+  const apiUrl = `https://api.github.com/repos/${REMOTE_REPO}/contents/${WORKFLOWS_PATH}`
   return new Promise((resolve, reject) => {
     https.get(apiUrl, {
       headers: { 'User-Agent': 'fetch-remote-docs-script' }
@@ -92,64 +92,50 @@ function askConfirmation() {
 
 // Download and write a file
 async function downloadDoc(file) {
-  // Ensure docs directory exists
-  if (!fs.existsSync(DOCS_PATH)) {
-    fs.mkdirSync(DOCS_PATH, { recursive: true })
+  // Ensure workflows directory exists
+  if (!fs.existsSync(WORKFLOWS_PATH)) {
+    fs.mkdirSync(WORKFLOWS_PATH, { recursive: true })
   }
-  // Use the correct raw URL for docs
-  const url = `${RAW_BASE}/docs/${file.name}`
-  const dest = path.join(DOCS_PATH, file.name)
+  // Use the correct raw URL for workflows
+  const url = `${RAW_BASE}/${WORKFLOWS_PATH}/${file.name}`
+  const dest = path.join(WORKFLOWS_PATH, file.name)
   try {
     const data = await fetchRemoteFile(url)
     fs.writeFileSync(dest, data)
-    console.log(green(`Copied: docs/${file.name}`))
+    console.log(green(`Copied: ${WORKFLOWS_PATH}/${file.name}`))
   } catch (err) {
     console.log(red(`Failed to copy ${file.name}: ${err.message}`))
   }
 }
 
-// Extract the workflow instructions section from README.md and write to docs/instructions.md in the current working directory
+// Extract the workflow instructions section from README.md and write to .windsurf/workflows/instructions.md in the current working directory
 async function copyInstructionsFromReadme () {
   // Read README.md from the script's directory
   const readmePath = path.join(__dirname, 'README.md')
-  // Write instructions.md to the docs/ subdirectory of the current working directory
-  const docsDir = path.join(process.cwd(), 'docs')
-  const instructionsPath = path.join(docsDir, 'instructions.md')
+  // Write instructions.md to the workflows/ subdirectory of the current working directory
+  const workflowsDir = path.join(process.cwd(), WORKFLOWS_PATH)
+  const instructionsPath = path.join(workflowsDir, 'instructions.md')
   try {
     const content = await fs.promises.readFile(readmePath, 'utf8')
     const lines = content.split(/\r?\n/)
     // Find the start of the workflow section
     const startIdx = lines.findIndex(line => line.trim().startsWith('## Windsurf Task Manager Workflow'))
     if (startIdx === -1) throw new Error('Workflow section not found in README.md')
-    // Find the end of the workflow summary (after the last numbered step)
-    let endIdx = -1
-    const summaryIdx = lines.findIndex((line, i) => i > startIdx && line.trim() === '**Workflow Summary:**')
-    if (summaryIdx !== -1) {
-      // Find the last numbered step after summaryIdx
-      let lastStep = summaryIdx + 1
-      while (lastStep < lines.length && /^\d+\./.test(lines[lastStep].trim())) {
-        lastStep++
-      }
-      // Also include any indented code blocks under the last numbered step
-      while (lastStep < lines.length && (lines[lastStep].startsWith('    ') || lines[lastStep].trim() === '')) {
-        lastStep++
-      }
-      endIdx = lastStep
-    } else {
-      // If summary not found, fall back to next major header or end of file
-      endIdx = lines.findIndex((line, i) => i > startIdx && line.startsWith('## '))
-      if (endIdx === -1) endIdx = lines.length
+    // Find the end of the workflow section: next major header or EOF
+    let endIdx = lines.findIndex((line, i) => i > startIdx && line.startsWith('## '))
+    if (endIdx === -1) {
+      endIdx = lines.length
     }
     const instructions = lines.slice(startIdx, endIdx).join('\n').trim()
     if (!instructions) {
       throw new Error('No instructions found in the workflow section of README.md')
     }
-    // Ensure docs directory exists in cwd
-    if (!fs.existsSync(docsDir)) {
-      fs.mkdirSync(docsDir, { recursive: true })
+    // Ensure workflows directory exists in cwd
+    if (!fs.existsSync(workflowsDir)) {
+      fs.mkdirSync(workflowsDir, { recursive: true })
     }
     await fs.promises.writeFile(instructionsPath, instructions, 'utf8')
-    console.log(green(`Instructions copied to docs/instructions.md in the current directory`))
+    console.log(green(`Instructions copied to ${WORKFLOWS_PATH}/instructions.md in the current directory`))
   } catch (err) {
     console.log(red('Failed to extract/write instructions from README.md:'), err.message)
   }
@@ -163,9 +149,9 @@ async function copyInstructionsFromReadme () {
     console.log(red('Aborted by user.'))
     process.exit(1)
   }
-  // Copy instructions from local README.md to docs/instructions.md
+  // Copy instructions from local README.md to workflows/instructions.md
   await copyInstructionsFromReadme()
-  console.log(cyan('\nFetching docs from remote repo...'))
+  console.log(cyan('\nFetching workflows from remote repo...'))
   let docs
   try {
     docs = await fetchDocsList()
@@ -177,5 +163,5 @@ async function copyInstructionsFromReadme () {
   for (const file of docs) {
     await downloadDoc(file)
   }
-  console.log(bold(green('\nAll docs copied successfully!')))
+  console.log(bold(green('\nAll workflows copied successfully!')))
 })()

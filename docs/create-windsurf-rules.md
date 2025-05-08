@@ -1,4 +1,8 @@
-# Rule: Generating a Windsurf Rules Document
+---
+description: "Guide Cascade to produce a configurable windsurf rules file for the workspace."
+---
+
+# Generate a Windsurf Rules
 
 ## Goal
 
@@ -87,3 +91,5 @@ Or using XML-style grouping:
 2. Use the user's answers to refine and improve the rules document.
 3. Keep the document actionable, clear, and concise for both technical and non-technical contributors.
 4. To activate your rules, review the generated `windsurfrules.md`, make any necessary edits, and then manually rename it to `.windsurfrules` in your project root.
+
+> Run `/create-windsurf-rules` in Cascade to start this workflow.

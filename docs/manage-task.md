@@ -1,6 +1,18 @@
+---
+description: "Guide Cascade to manage, execute a task and update a task list"
+---
+
 # Task List Management
 
-Guidelines for managing task lists in markdown files to track progress on completing a PRD
+Guidelines for managing and executing tasks from a task list in markdown files to track progress on completing a PRD
+
+## Input Process
+
+The user points Windsurf editor to a specific PRD and a task list file:
+
+1. Receive the task list file and the PRD file from the user and load them in the context
+2. Ask the user to specify the task number
+3. start executing the task following the instructions below
 
 ## Task Implementation
 - **One sub-task at a time:** Do **NOT** start the next sub‑task until you ask the user for permission and they say “yes” or "y"
@@ -32,3 +44,5 @@ When working with task lists, the AI must:
 4. Keep “Relevant Files” accurate and up to date.
 5. Before starting work, check which sub‑task is next.
 6. After implementing a sub‑task, update the file and then pause for user approval.
+
+> Run `/manage-task <prd-file> <task-list-file>` in Cascade to start this workflow.

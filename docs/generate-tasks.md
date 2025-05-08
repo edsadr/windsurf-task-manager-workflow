@@ -1,4 +1,8 @@
-# Rule: Generating a Task List from a PRD
+---
+description: "Guide Cascade to produce a step-by-step task list based on a PRD."
+---
+
+# Generate a Task List from a PRD
 
 ## Goal
 
@@ -7,7 +11,7 @@ To guide Windsurf editor in creating a detailed, step-by-step task list in Markd
 ## Output
 
 - **Format:** Markdown (`.md`)
-- **Location:** `docs/tasks/`
+- **Location:** `docs/`
 - **Filename:** `tasks-[prd-file-name].md` (e.g., `tasks-prd-user-profile-editing.md`)
 
 ## Process
@@ -53,3 +57,5 @@ The process explicitly requires a pause after generating parent tasks to get use
 ## Target Audience
 
 Assume the primary reader of the task list is a **developer** who will implement the feature.
+
+> Run `/generate-tasks <prd-file>` in Cascade to start this workflow.

@@ -2,7 +2,7 @@
 
 Follow this 6-step process for effectively managing an AI developer within Windsurf editor to build complex features by breaking down large development tasks into manageable, verifiable steps for sequential AI execution.
 
-**Prerequisites:** Access to Windsurf editor and the necessary rule files (`generate-tasks.md`, `task-list.md`).
+**Prerequisites:** Access to Windsurf editor and the necessary worflows files (`create-prd.md`, `create-windsurf-rules.md`, `generate-tasks.md`, `manage-task.md`).
 
 **Step 1: Create a Product Requirement Document (PRD)**
 
@@ -10,8 +10,8 @@ Follow this 6-step process for effectively managing an AI developer within Winds
 * **How:** Create a PRD in a markdown file (`.md`) directly within Windsurf editor. Clearly outline the features, requirements, and goals of your project.
     * Start like this:
         ```
-        Use @create-prd.md
-        Here's the feature: {define your feature here}
+        /create-prd
+        Feature: {define your feature here}
         ```
 * **Output:** A markdown file (e.g., `YourProject-PRD.md`) detailing the product requirements.
 
@@ -22,7 +22,7 @@ Follow this 6-step process for effectively managing an AI developer within Winds
     * Use the [docs/create-windsurf-rules.md](docs/create-windsurf-rules.md) as a guide.
     * In Windsurf editor Agent chat, start with:
         ```
-        Follow the process in @create-windsurf-rules.md have in mind the context of @YourProject-PRD.md
+        /create-windsurf-rules
         ```
     * Answer any clarifying questions from Cascade to refine your rules.
     * Save the output as `windsurfrules.md` in your project root.
@@ -36,7 +36,7 @@ Follow this 6-step process for effectively managing an AI developer within Winds
     * Use the `generate-tasks.md` rule file (available within Windsurf editor).
     * In Windsurf editor Agent chat, use the following command structure, replacing `YourProject-PRD.md` with the actual filename of your PRD from Step 1:
         ```
-        Take @YourProject-PRD.md and create tasks using @generate-tasks.md
+        /generate-tasks @YourProject-PRD.md
         ```
 * **Output:** A detailed, multi-step task list, likely broken down into tasks and sub-tasks.
 
@@ -45,27 +45,20 @@ Follow this 6-step process for effectively managing an AI developer within Winds
 * **Purpose:** Review Windsurf editor-generated task list for accuracy, completeness, and logical flow.
 * **How:** Carefully read through the tasks and sub-tasks generated in the previous step. Ensure they accurately reflect the steps needed to implement the PRD. Make any necessary manual adjustments.
 
-**Step 5: Create Instructions for Task Completion**
-
-* **Purpose:** Instruct Windsurf editor on how to process the task list, focusing on completing one task at a time for verification.
-* **How:**
-    * Use the `task-list.md` rule file (available within Windsurf editor). This file contains instructions to guide Windsurf editor through the list sequentially.
-    * In Windsurf editor Agent chat, start the process with the first task (e.g., 1.1) using this command structure:
-        ```
-        Start on 1.1 and use @task-list.md
-        ```
-    * **Note:** You only need to reference `@task-list.md` for the very first task. The rules within the file should guide Windsurf editor to prompt for the next step after each completion.
-* **Output:** Windsurf editor is now set up to tackle the tasks one by one.
-
-**Step 6: Execute and Verify Tasks**
+**Step 5: Execute and Verify Tasks**
 
 * **Purpose:** Work through the development process by having Windsurf editor execute each task and verifying the output before proceeding.
 * **How:**
-    * Windsurf editor will perform the first task (e.g., 1.1).
-    * Review the changes made by Windsurf editor.
-    * If correct, approve or instruct Windsurf editor to move to the next task (e.g., 1.2).
+    * In Windsurf editor Agent chat, start the process with the first task (e.g., 1.1) by using the following command structure:
+        ```
+        /manage-task @YourProject-PRD.md @tasks-YourProject-PRD.md
+        ```
+    * After each task, review the output. When ready, instruct Windsurf editor to move to the next task (e.g., 1.2) by using the following command structure:
+        ```
+        Continue with the next task
+        ```
     * Repeat this cycle: Windsurf editor executes a task -> You verify -> Instruct Windsurf editor on the next task.
-* **Output:** A progressively built feature, with each step validated. The task list gets marked off as you proceed.
+    * **Output:** A progressively built feature, with each step validated. The task list gets marked off as you proceed.
 
 ## Usage: Fetch Remote Docs from Workflow Repo
 
@@ -97,30 +90,27 @@ Here are example prompts to use with the files already provided in this repo:
 1. **Create a PRD**
 Prompt:
 ```
-Use @create-prd.md
-Here's the feature: {describe your feature here}
+/create-prd
+Feature: {describe your feature here}
 ```
 
 2. **Prepare Workspace with Windsurf Rules**
 Prompt:
 ```
-Follow the process in @create-windsurf-rules.md have in mind the context of @YourProject-PRD.md
+/create-windsurf-rules
 ```
 
 3. **Generate Tasks from PRD**
 Prompt:
 ```
-Take @YourProject-PRD.md and create tasks using @generate-tasks.md
+/generate-tasks @YourProject-PRD.md
 ```
 
-4. **Start Task Execution**
+4. **Start A Task Execution**
 Prompt:
 ```
-Please start on 1.1 and use @task-list.md
+/manage-task @YourProject-PRD.md @tasks-YourProject-PRD.md
 ```
 
 5. **Continue/Verify**
-After each task, review the output. When ready, instruct:
-```
-Continue with the next task
-```
+After each task, review the output and repeat the step 4 for the next task.
