@@ -1,6 +1,6 @@
 ## Windsurf Task Manager Workflow
 
-Follow this 6-step process for effectively managing an AI developer within Windsurf editor to build complex features by breaking down large development tasks into manageable, verifiable steps for sequential AI execution.
+Follow this 5-step process for effectively managing an AI development workflows within Windsurf editor to build complex features by breaking down large development tasks into manageable, verifiable steps for sequential AI execution.
 
 **Prerequisites:** Access to Windsurf editor and the necessary worflows files (`create-prd.md`, `create-windsurf-rules.md`, `generate-tasks.md`, `manage-task.md`).
 
@@ -80,8 +80,6 @@ You can also run it directly if you have the repo cloned:
 ```sh
 ./windsurf-task-manager-workflow.js
 ```
-
-> The script uses the latest Node.js and requires the `colorette` module (already included as a dependency).
 
 **Workflow Summary:**
 

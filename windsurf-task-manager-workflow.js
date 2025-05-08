@@ -114,9 +114,9 @@ async function downloadDoc(file) {
 async function copyInstructionsFromReadme () {
   // Read README.md from the script's directory
   const readmePath = path.join(__dirname, 'README.md')
-  // Write instructions.md to the local workflows directory
-  const localDir = path.join(process.cwd(), LOCAL_WORKFLOWS_DIR)
-  const instructionsPath = path.join(localDir, 'instructions.md')
+  // Write instructions.md to the docs/ subdirectory of the current working directory
+  const docsDir = path.join(process.cwd(), 'docs')
+  const instructionsPath = path.join(docsDir, 'instructions.md')
   try {
     const content = await fs.promises.readFile(readmePath, 'utf8')
     const lines = content.split(/\r?\n/)
@@ -132,12 +132,12 @@ async function copyInstructionsFromReadme () {
     if (!instructions) {
       throw new Error('No instructions found in the workflow section of README.md')
     }
-    // Ensure local workflows directory exists in cwd
-    if (!fs.existsSync(localDir)) {
-      fs.mkdirSync(localDir, { recursive: true })
+    // Ensure docs directory exists in cwd
+    if (!fs.existsSync(docsDir)) {
+      fs.mkdirSync(docsDir, { recursive: true })
     }
     await fs.promises.writeFile(instructionsPath, instructions, 'utf8')
-    console.log(green(`Instructions copied to ${LOCAL_WORKFLOWS_DIR}/instructions.md in the current directory`))
+    console.log(green(`Instructions copied to docs/instructions.md in the current directory`))
   } catch (err) {
     console.log(red('Failed to extract/write instructions from README.md:'), err.message)
   }
