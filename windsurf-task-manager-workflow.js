@@ -16,7 +16,8 @@ const TerminalRenderer = require('marked-terminal').default || require('marked-t
 const REMOTE_REPO = 'edsadr/windsurf-task-manager-workflow'
 // Use the correct branch ref for raw URLs
 const RAW_BASE = `https://raw.githubusercontent.com/${REMOTE_REPO}/refs/heads/master`
-const WORKFLOWS_PATH = '.windsurf/workflows' // remote workflows directory
+const REMOTE_WORKFLOWS_PATH = 'workflows' // remote workflows directory
+const LOCAL_WORKFLOWS_DIR = '.windsurf/workflows' // local workflows directory
 const LOCAL_DEST = process.cwd()
 
 // Helper to fetch a remote file as string
@@ -36,7 +37,7 @@ function fetchRemoteFile(url) {
 
 // Helper to fetch remote directory listing via GitHub API
 function fetchDocsList() {
-  const apiUrl = `https://api.github.com/repos/${REMOTE_REPO}/contents/${WORKFLOWS_PATH}`
+  const apiUrl = `https://api.github.com/repos/${REMOTE_REPO}/contents/${REMOTE_WORKFLOWS_PATH}`
   return new Promise((resolve, reject) => {
     https.get(apiUrl, {
       headers: { 'User-Agent': 'fetch-remote-docs-script' }
@@ -92,17 +93,18 @@ function askConfirmation() {
 
 // Download and write a file
 async function downloadDoc(file) {
-  // Ensure workflows directory exists
-  if (!fs.existsSync(WORKFLOWS_PATH)) {
-    fs.mkdirSync(WORKFLOWS_PATH, { recursive: true })
+  const localDir = LOCAL_WORKFLOWS_DIR
+  // Ensure local workflows directory exists
+  if (!fs.existsSync(localDir)) {
+    fs.mkdirSync(localDir, { recursive: true })
   }
   // Use the correct raw URL for workflows
-  const url = `${RAW_BASE}/${WORKFLOWS_PATH}/${file.name}`
-  const dest = path.join(WORKFLOWS_PATH, file.name)
+  const url = `${RAW_BASE}/${REMOTE_WORKFLOWS_PATH}/${file.name}`
+  const dest = path.join(localDir, file.name)
   try {
     const data = await fetchRemoteFile(url)
     fs.writeFileSync(dest, data)
-    console.log(green(`Copied: ${WORKFLOWS_PATH}/${file.name}`))
+    console.log(green(`Copied: ${LOCAL_WORKFLOWS_DIR}/${file.name}`))
   } catch (err) {
     console.log(red(`Failed to copy ${file.name}: ${err.message}`))
   }
@@ -112,9 +114,9 @@ async function downloadDoc(file) {
 async function copyInstructionsFromReadme () {
   // Read README.md from the script's directory
   const readmePath = path.join(__dirname, 'README.md')
-  // Write instructions.md to the workflows/ subdirectory of the current working directory
-  const workflowsDir = path.join(process.cwd(), WORKFLOWS_PATH)
-  const instructionsPath = path.join(workflowsDir, 'instructions.md')
+  // Write instructions.md to the local workflows directory
+  const localDir = path.join(process.cwd(), LOCAL_WORKFLOWS_DIR)
+  const instructionsPath = path.join(localDir, 'instructions.md')
   try {
     const content = await fs.promises.readFile(readmePath, 'utf8')
     const lines = content.split(/\r?\n/)
@@ -130,12 +132,12 @@ async function copyInstructionsFromReadme () {
     if (!instructions) {
       throw new Error('No instructions found in the workflow section of README.md')
     }
-    // Ensure workflows directory exists in cwd
-    if (!fs.existsSync(workflowsDir)) {
-      fs.mkdirSync(workflowsDir, { recursive: true })
+    // Ensure local workflows directory exists in cwd
+    if (!fs.existsSync(localDir)) {
+      fs.mkdirSync(localDir, { recursive: true })
     }
     await fs.promises.writeFile(instructionsPath, instructions, 'utf8')
-    console.log(green(`Instructions copied to ${WORKFLOWS_PATH}/instructions.md in the current directory`))
+    console.log(green(`Instructions copied to ${LOCAL_WORKFLOWS_DIR}/instructions.md in the current directory`))
   } catch (err) {
     console.log(red('Failed to extract/write instructions from README.md:'), err.message)
   }
