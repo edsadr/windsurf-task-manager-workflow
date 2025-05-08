@@ -1,6 +1,6 @@
 {
   "name": "windsurf-task-manager",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Windsurf Task Manager Workflow",
   "main": "windsurf-task-manager-workflow.js",
   "bin": {
