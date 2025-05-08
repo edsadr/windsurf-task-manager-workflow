@@ -37,7 +37,7 @@ function fetchRemoteFile(url) {
 
 // Helper to fetch remote directory listing via GitHub API
 function fetchDocsList() {
-  const apiUrl = `https://api.github.com/repos/${REMOTE_REPO}/contents/${REMOTE_WORKFLOWS_PATH}`
+  const apiUrl = `https://api.github.com/repos/${REMOTE_REPO}/contents/${REMOTE_WORKFLOWS_PATH}?ref=master`
   return new Promise((resolve, reject) => {
     https.get(apiUrl, {
       headers: { 'User-Agent': 'fetch-remote-docs-script' }
